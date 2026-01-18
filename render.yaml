@@ -39,12 +39,12 @@ services:
           name: arch-gym-redis
           property: connectionString
 
-databases:
-  - name: arch-gym-db
-    plan: free
-
   # 3. Redis Instance
   - type: redis
     name: arch-gym-redis
     plan: free
     ipAllowList: [] # 기본적으로 내부 접속만 허용
+
+databases:
+  - name: arch-gym-db
+    plan: free
