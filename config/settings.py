@@ -12,23 +12,34 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+import os
+import environ
+import dj_database_url
 
+# 2026-01-18: 환경 변수 설정을 위한 django-environ 초기화
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# .env 파일이 존재하는 경우 읽어오기
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+# 2026-01-18: 보안을 위해 SECRET_KEY를 환경 변수에서 가져옴
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-fallback-key-for-dev')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 2026-01-18: 프로덕션에서는 DEBUG를 False로 설정 (환경 변수 우선)
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['squally-felsitic-burton.ngrok-free.dev', 'localhost', '127.0.0.1']
+# 2026-01-18: 허용할 호스트 설정을 환경 변수에서 가져옴
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.onrender.com'])
 
 # 2026-01-17: ngrok 접속 시 CSRF 검증을 위해 신뢰할 수 있는 오리진 추가
 CSRF_TRUSTED_ORIGINS = ['https://squally-felsitic-burton.ngrok-free.dev']
+if env('RENDER_EXTERNAL_URL', default=None):
+    CSRF_TRUSTED_ORIGINS.append(env('RENDER_EXTERNAL_URL'))
 
 
 # Application definition
@@ -48,6 +59,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 2026-01-18: WhiteNoise 미들웨어를 SecurityMiddleware 바로 다음에 추가 (정적 파일 서빙용)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 2026-01-16: CORS 미들웨어 추가 (프론트엔드 연동을 위함)
     'corsheaders.middleware.CorsMiddleware',
@@ -82,11 +95,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# 2026-01-18: DATABASE_URL 환경 변수를 사용하여 데이터베이스 설정 (Render 등의 클라우드 환경 최적화)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 
@@ -130,14 +144,20 @@ STATICFILES_DIRS = [
     BASE_DIR / 'frontend',
 ]
 
+# 2026-01-18: 프로덕션 환경에서의 정적 파일 모음 경로 설정
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# 2026-01-18: WhiteNoise 정적 파일 압축 및 캐싱 설정
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# 2026-01-16: Celery & Redis 설정
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# 2026-01-16: Celery & Redis 설정 (2026-01-18: 환경 변수 도입)
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
