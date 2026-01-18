@@ -43,7 +43,7 @@ databases:
   - name: arch-gym-db
     plan: free
 
-services:
+  # 3. Redis Instance
   - type: redis
     name: arch-gym-redis
     plan: free
