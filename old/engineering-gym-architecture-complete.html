@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Gym 시스템 아키텍처</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .intro h2 {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .intro-highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .diagram-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .diagram-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mermaid-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .practice-tracks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .track-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .track-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .track-card.code {
+            border-left: 5px solid #3498db;
+        }
+
+        .track-card.debug {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .track-card.system {
+            border-left: 5px solid #9b59b6;
+        }
+
+        .track-card.ops {
+            border-left: 5px solid #f39c12;
+        }
+
+        .track-card.agent {
+            border-left: 5px solid #1abc9c;
+        }
+
+        .track-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
+        .track-desc {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .track-example {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #666;
+            border-left: 3px solid #95a5a6;
+        }
+
+        .track-goal {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .layer {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        .layer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            color: #2c3e50;
+        }
+
+        .layer-intro {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .analogy {
+            background: #fff9e6;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #856404;
+            border-left: 3px solid #ffc107;
+        }
+
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .component {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+
+        .component-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .component-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .component-desc ul {
+            margin-left: 18px;
+            margin-top: 5px;
+        }
+
+        .component-desc li {
+            margin-bottom: 3px;
+        }
+
+        .easy-explain {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+
+        .layer-1 {
+            background: #e3f2fd;
+        }
+
+        .layer-2 {
+            background: #fff3e0;
+        }
+
+        .layer-3 {
+            background: #f3e5f5;
+        }
+
+        .layer-4 {
+            background: #e8f5e9;
+        }
+
+        .layer-5 {
+            background: #fff9c4;
+        }
+
+        .layer-6 {
+            background: #fce4ec;
+        }
+
+        .layer-7 {
+            background: #e0f2f1;
+        }
+
+        .layer-8 {
+            background: #f5f5f5;
+        }
+
+        .sub-layer {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            border: 1px dashed #999;
+        }
+
+        .sub-layer-title {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #3498db;
+            margin: 10px 0;
+        }
+
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .key-point {
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .campaign-mode {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .campaign-mode h2 {
+            margin-bottom: 15px;
+        }
+
+        .campaign-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .campaign-step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏋️ Engineering Gym 시스템 아키텍처</h1>
+        <div class="subtitle">실무 역량을 체계적으로 훈련하는 연습 플랫폼</div>
+
+        <div class="intro">
+            <h2>🎯 Engineering Gym이란?</h2>
+            <p>
+                단순히 "코딩 테스트 맞히기"를 넘어서, <strong>실무에서 진짜 필요한 엔지니어링 역량</strong>을
+                체계적으로 훈련하는 플랫폼입니다.
+            </p>
+            <div class="intro-highlight">
+                <strong>💡 핵심 차별점:</strong><br>
+                ✅ 5가지 트랙으로 다각도 훈련 (코딩/디버깅/설계/장애대응/AI)<br>
+                ✅ AI 코치가 실시간 피드백 + 꼬리질문<br>
+                ✅ 객관적 측정 + 주관적 코칭의 조화<br>
+                ✅ Campaign Mode로 실무 시나리오 체험<br>
+                <br>
+                <strong>🎓 누구를 위한 플랫폼?</strong><br>
+                신입 개발자, 취업 준비생, 실무 감각을 키우고 싶은 주니어 엔지니어
+            </div>
+        </div>
+
+        <div class="diagram-section">
+            <h2>📊 전체 시스템 아키텍처</h2>
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TB
+                    subgraph "Client Layer"
+                    UI[Web/Mobile UI]
+                    CodeEditor[Code Editor]
+                    DiagramEditor[Diagram Editor<br />Mermaid]
+                    end
+
+                    subgraph "API Gateway & Auth"
+                    Gateway[API Gateway]
+                    RateLimit[Rate Limiter]
+                    Auth[Auth Service<br />JWT]
+                    end
+
+                    subgraph "Content Management"
+                    ScenarioDB[(Scenario DB)]
+                    ConstraintsDB[(Constraints DB)]
+                    TestCaseDB[(Test Cases)]
+                    TemplateDB[(Solution Templates)]
+                    end
+
+                    subgraph "Core Practice Services"
+                    Router[Practice Router]
+
+                    subgraph "Code Practice"
+                    CodeHandler[Code Submission]
+                    Sandbox[Sandbox Runner]
+                    PerfAnalyzer[Performance Analyzer]
+                    QualityCheck[Code Quality]
+                    end
+
+                    subgraph "Debug Practice"
+                    DebugHandler[Debug Submission]
+                    BugVerifier[Bug Fix Verifier]
+                    DiffAnalyzer[Diff Analyzer]
+                    RefactorCheck[Refactoring Quality]
+                    end
+
+                    subgraph "System Practice"
+                    SystemHandler[System Design Submission]
+                    MermaidParser[Mermaid Parser]
+                    ArchReviewer[Architecture Reviewer]
+                    TradeoffAnalyzer[Tradeoff Analyzer]
+                    end
+
+                    subgraph "Ops Practice"
+                    OpsHandler[Incident Handler]
+                    MetricsCollector[Metrics/Logs Analyzer]
+                    DecisionEngine[Decision Validator]
+                    MTTRCalculator[MTTR Calculator]
+                    end
+
+                    subgraph "Agent Practice"
+                    AgentHandler[Agent Submission]
+                    AutoSubmitter[Auto-Submission Manager]
+                    PromptEvaluator[Prompt Evaluator]
+                    RAGAnalyzer[RAG Quality Checker]
+                    HallucinationDetector[Hallucination Detector]
+                    end
+                    end
+
+                    subgraph "Evaluation Engine"
+                    TestManager[Test Case Manager]
+                    MetricsAgg[Metrics Aggregator]
+                    ObjectiveFB[Objective Feedback]
+                    ChecklistEngine[Checklist Engine]
+                    end
+
+                    subgraph "AI/LLM Layer"
+                    LLMOrch[LLM Orchestrator]
+                    QuestionGen[Question Generator]
+                    CoachFB[Coach Feedback]
+                    AltSolution[Alternative Solutions]
+                    end
+
+                    subgraph "User Progress"
+                    ProgressTracker[Progress Tracker]
+                    UserHistory[(User Data & History)]
+                    Recommender[Next Challenge<br />Recommender]
+                    end
+
+                    subgraph "Infrastructure"
+                    Storage[Object Storage<br />S3]
+                    Cache[Cache<br />Redis]
+                    Queue[Message Queue<br />Kafka]
+                    Monitoring[Monitoring &<br />Logging]
+                    end
+
+                    UI --> Gateway
+                    CodeEditor --> Gateway
+                    DiagramEditor --> Gateway
+
+                    Gateway --> RateLimit
+                    RateLimit --> Auth
+                    Auth --> Router
+
+                    Router --> CodeHandler
+                    Router --> DebugHandler
+                    Router --> SystemHandler
+                    Router --> OpsHandler
+                    Router --> AgentHandler
+                    Router --> AutoSubmitter
+
+                    AutoSubmitter <--> LLMOrch
+                        AutoSubmitter --> AgentHandler
+
+                        CodeHandler --> Sandbox
+                        Sandbox --> PerfAnalyzer
+                        PerfAnalyzer --> QualityCheck
+
+                        DebugHandler --> BugVerifier
+                        BugVerifier --> DiffAnalyzer
+                        DiffAnalyzer --> RefactorCheck
+
+                        SystemHandler --> MermaidParser
+                        MermaidParser --> ArchReviewer
+                        ArchReviewer --> TradeoffAnalyzer
+
+                        OpsHandler --> MetricsCollector
+                        MetricsCollector --> DecisionEngine
+                        DecisionEngine --> MTTRCalculator
+
+                        AgentHandler --> PromptEvaluator
+                        PromptEvaluator --> RAGAnalyzer
+                        RAGAnalyzer --> HallucinationDetector
+
+                        ScenarioDB --> Router
+                        ConstraintsDB --> Router
+                        TestCaseDB --> TestManager
+                        TemplateDB --> TestManager
+
+                        QualityCheck --> TestManager
+                        RefactorCheck --> TestManager
+                        TradeoffAnalyzer --> TestManager
+                        MTTRCalculator --> TestManager
+                        HallucinationDetector --> TestManager
+
+                        TestManager --> MetricsAgg
+                        MetricsAgg --> ObjectiveFB
+                        ObjectiveFB --> ChecklistEngine
+
+                        ChecklistEngine --> LLMOrch
+                        LLMOrch --> QuestionGen
+                        LLMOrch --> CoachFB
+                        LLMOrch --> AltSolution
+
+                        AltSolution --> ProgressTracker
+                        ProgressTracker --> UserHistory
+                        UserHistory --> Recommender
+
+                        Recommender --> UI
+
+                        Storage -.-> Router
+                        Cache -.-> Router
+                        Queue -.-> Router
+                        Monitoring -.-> Router
+
+                        style UI fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+                        style CodeEditor fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+                        style DiagramEditor fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+                        style Gateway fill:#fff3e0
+                        style Router fill:#e8f5e9
+                        style TestManager fill:#fff9c4
+                        style LLMOrch fill:#e0f2f1
+                        style ProgressTracker fill:#fce4ec
+                </div>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 14px; text-align: center;">
+                ↑ 5가지 Practice 트랙이 모두 동일한 평가/피드백 파이프라인을 공유합니다
+            </p>
+        </div>
+
+        <h2 style="text-align: center; margin: 40px 0 20px; color: #2c3e50;">🎮 5가지 Practice 트랙</h2>
+
+        <div class="practice-tracks">
+            <div class="track-card code">
+                <div class="track-title">💻 1. Code Practice</div>
+                <div class="track-desc">
+                    <strong>실무형 코딩테스트</strong><br>
+                    단순 알고리즘이 아닌, 실제 업무에서 만나는 문제들을 해결합니다.
+                </div>
+                <div class="track-example">
+                    <strong>📌 예시 문제:</strong><br>
+                    • Rate limiter 구현 (token bucket)<br>
+                    • 로그 집계 (rolling window)<br>
+                    • CSV ingest → validate → summary<br>
+                    • 간단한 검색 ranking
+                </div>
+                <div class="track-goal">
+                    🎯 목표: 정확성 + 성능 + 실무적 안정성을 동시에 감각화
+                </div>
+            </div>
+
+            <div class="track-card debug">
+                <div class="track-title">🐛 2. Debug Practice</div>
+                <div class="track-desc">
+                    <strong>버그 수정 + 클린업 스페셜리스트</strong><br>
+                    A) Bug Hunt: 숨은 버그 찾기<br>
+                    B) Vibe Cleanup: 지저분한 코드 리팩토링
+                </div>
+                <div class="track-example">
+                    <strong>📌 예시 문제:</strong><br>
+                    • off-by-one 에러 찾기<br>
+                    • null guard 누락 수정<br>
+                    • 중복 코드 제거<br>
+                    • 함수 분리 및 네이밍 개선
+                </div>
+                <div class="track-goal">
+                    🎯 목표: 코드를 고쳐서 더 건강하게 만드는 감각 훈련
+                </div>
+            </div>
+
+            <div class="track-card system">
+                <div class="track-title">🏗️ 3. System Practice</div>
+                <div class="track-desc">
+                    <strong>아키텍처 설계 + 트레이드오프</strong><br>
+                    Mermaid로 다이어그램을 그리고, 설계 결정의 이유를 설명합니다.
+                </div>
+                <div class="track-example">
+                    <strong>📌 예시 시나리오:</strong><br>
+                    • 사내 문서 검색 챗봇 (보안/온프렘)<br>
+                    • 주문/결제 이벤트 처리 (peak 트래픽)<br>
+                    • 실시간 알림 시스템 (푸시)
+                </div>
+                <div class="track-goal">
+                    🎯 목표: "왜 이렇게 설계했는지"를 논리적으로 말하는 훈련
+                </div>
+            </div>
+
+            <div class="track-card ops">
+                <div class="track-title">🚨 4. Ops Practice</div>
+                <div class="track-desc">
+                    <strong>장애 대응 / 운영 감각</strong><br>
+                    인시던트가 발생하면 제한 시간 내에 복구해야 합니다.
+                </div>
+                <div class="track-example">
+                    <strong>📌 예시 인시던트:</strong><br>
+                    • p95 latency 폭증<br>
+                    • DB connection leak<br>
+                    • cache stampede<br>
+                    • 배포 후 에러율 증가
+                </div>
+                <div class="track-goal">
+                    🎯 목표: 불확실성 속에서 안전한 결정을 내리는 감각 훈련
+                </div>
+            </div>
+
+            <div class="track-card agent">
+                <div class="track-title">🤖 5. Agent Practice</div>
+                <div class="track-desc">
+                    <strong>AI/LLM 시스템 디버깅</strong><br>
+                    망가진 Agent/RAG 파이프라인을 수정하여 성능을 개선합니다.
+                </div>
+                <div class="track-example">
+                    <strong>📌 예시 시나리오:</strong><br>
+                    • RAG가 근거 없이 환각 생성<br>
+                    • Tool calling이 엉뚱한 툴 호출<br>
+                    • Long context에서 이전 약속 망각<br>
+                    • 시스템 프롬프트 충돌
+                </div>
+                <div class="track-goal">
+                    🎯 목표: LLM이 틀릴 때 '시스템적으로' 고치는 능력 훈련
+                </div>
+            </div>
+        </div>
+
+        <div class="campaign-mode">
+            <h2>🎮 Campaign Mode: "Engineer RPG"</h2>
+            <p>
+                한 번의 캠페인에서 모든 트랙을 순차적으로 경험하며,
+                실무 프로젝트의 전체 라이프사이클을 시뮬레이션합니다.
+            </p>
+            <div class="campaign-steps">
+                <div class="campaign-step">
+                    <div class="step-number">1️⃣</div>
+                    <div><strong>Code Practice</strong><br>기능 구현</div>
+                </div>
+                <div class="campaign-step">
+                    <div class="step-number">2️⃣</div>
+                    <div><strong>Debug/Cleanup</strong><br>품질/버그 정리</div>
+                </div>
+                <div class="campaign-step">
+                    <div class="step-number">3️⃣</div>
+                    <div><strong>System Practice</strong><br>트래픽 증가에 대응한 확장</div>
+                </div>
+                <div class="campaign-step">
+                    <div class="step-number">4️⃣</div>
+                    <div><strong>Ops Practice</strong><br>장애 터짐 → 복구</div>
+                </div>
+                <div class="campaign-step">
+                    <div class="step-number">5️⃣</div>
+                    <div><strong>Agent Practice</strong><br>AI 기능 추가 → 안정화</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin: 40px 0 20px; color: #2c3e50;">🏗️ 시스템 레이어별 상세 설명</h2>
+
+        <!-- Layer 1 -->
+        <div class="layer layer-1">
+            <div class="layer-title">1️⃣ Client Layer - 사용자가 보는 세상</div>
+            <div class="layer-intro">
+                <strong>🎨 이 레이어는 뭐하는 곳?</strong><br>
+                사용자가 실제로 보고 만지는 화면입니다.
+                <div class="analogy">
+                    🏪 비유: 헬스장의 "운동 기구와 스크린"<br>
+                    사용자가 문제(운동 메뉴)를 보고, 풀이(운동)하고, 결과(근력 측정)를 확인하는 공간
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">📱 Web / Mobile UI</div>
+                    <div class="component-desc">
+                        <strong>역할:</strong> 5가지 Practice 트랙 선택 및 문제 표시<br>
+                        <div class="easy-explain">
+                            💬 쉽게: 헬스장에서 "오늘은 가슴 운동할까, 등 운동할까?" 선택하는 화면!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">💻 Code Editor</div>
+                    <div class="component-desc">
+                        <strong>역할:</strong> Code/Debug/Agent Practice용 코드 입력창<br>
+                        <div class="easy-explain">
+                            💬 쉽게: VS Code 웹 버전. 문법 하이라이팅, 자동완성, 실행 버튼 포함.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">📊 Diagram Editor (Mermaid)</div>
+                    <div class="component-desc">
+                        <strong>역할:</strong> System Practice용 아키텍처 다이어그램 작성<br>
+                        <div class="easy-explain">
+                            💬 쉽게: "A → B → C"라고 쓰면 자동으로 화살표 그림이 그려지는 마법 도구!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 2 -->
+        <div class="layer layer-2">
+            <div class="layer-title">2️⃣ API Gateway & Auth - 입구 보안 검색대</div>
+            <div class="layer-intro">
+                <strong>🚪 이 레이어는 뭐하는 곳?</strong><br>
+                헬스장 입구의 "출입 카드 인식기 + 트레이너 배정"
+                <div class="analogy">
+                    🏢 비유: 헬스장 리셉션<br>
+                    회원권 확인하고, "오늘 너무 많이 왔네? 쉬었다 와" 하고, 적절한 구역으로 안내
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">🚪 API Gateway</div>
+                    <div class="component-desc">
+                        모든 요청의 단일 입구
+                        <div class="easy-explain">
+                            💬 쉽게: 헬스장 정문. 여기 안 거치면 들어갈 수 없음.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">⏱️ Rate Limiter</div>
+                    <div class="component-desc">
+                        요청 횟수 제한<br>
+                        <strong>예:</strong> "1분에 코드 제출 10번까지"<br>
+                        <div class="easy-explain">
+                            💬 쉽게: "한 기구당 30분 이상 독점 금지" 룰. AI 호출은 돈이니까!
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 이게 없으면: 악의적 사용자가 서버 터뜨림 or 비용 폭발
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">🔐 Auth Service (JWT)</div>
+                    <div class="component-desc">
+                        <strong>JWT:</strong> 로그인 증명서<br>
+                        <div class="easy-explain">
+                            💬 쉽게: 헬스장 회원 팔찌. 한번 차면 계속 신분 증명 가능.
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 이게 없으면: 남의 운동 기록 보거나 조작 가능 (보안 붕괴)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 3 -->
+        <div class="layer layer-3">
+            <div class="layer-title">3️⃣ Content Management - 문제 은행</div>
+            <div class="layer-intro">
+                <strong>📚 이 레이어는 뭐하는 곳?</strong><br>
+                모든 연습 문제, 테스트 케이스, 정답 예시를 보관하는 창고
+                <div class="analogy">
+                    📦 비유: 헬스장의 "운동 프로그램 데이터베이스"<br>
+                    오늘 할 운동(문제), 목표 무게(제약), 평가 기준(테스트) 모두 여기 저장
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">📝 Scenario DB</div>
+                    <div class="component-desc">
+                        각 문제의 배경 스토리와 요구사항
+                        <div class="easy-explain">
+                            💬 예시: "당신은 결제 시스템 개발자입니다. peak 시간에 초당 1만 건..."
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">⚙️ Constraints DB</div>
+                    <div class="component-desc">
+                        제약 조건 (시간/메모리/보안/비용 등)
+                        <div class="easy-explain">
+                            💬 예시: "p95 latency 100ms 이하, 온프렘 환경, PII 데이터 보호 필수"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">✅ Test Cases</div>
+                    <div class="component-desc">
+                        숨겨진 테스트 케이스 (edge case, 성능 테스트 등)
+                        <div class="easy-explain">
+                            💬 쉽게: "과연 null을 잘 처리할까?", "1억 개 데이터도 터지지 않을까?"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">💡 Solution Templates</div>
+                    <div class="component-desc">
+                        모범 답안 및 다양한 접근법
+                        <div class="easy-explain">
+                            💬 쉽게: "이렇게 풀 수도 있고, 저렇게 풀 수도 있어요" 예시 모음
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 4 -->
+        <div class="layer layer-4">
+            <div class="layer-title">4️⃣ Core Practice Services - 실제 채점/실행 엔진</div>
+            <div class="layer-intro">
+                <strong>⚙️ 이 레이어는 뭐하는 곳?</strong><br>
+                사용자가 제출한 답을 "실제로 돌려보고" 평가하는 곳
+                <div class="analogy">
+                    🏋️ 비유: 헬스장의 "실제 운동 공간 + PT 트레이너"<br>
+                    코드를 실행하고, 버그를 찾고, 설계를 검토하고, 장애를 시뮬레이션
+                </div>
+            </div>
+
+            <!-- Sub-layer: Code Practice -->
+            <div class="sub-layer">
+                <div class="sub-layer-title">💻 Code Practice 파이프라인</div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📥 Code Handler</div>
+                        <div class="component-desc">
+                            제출된 코드를 받아서 검증 시작
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔒 Sandbox Runner</div>
+                        <div class="component-desc">
+                            격리된 환경에서 코드 실행 (Docker/VM)
+                            <div class="key-point">
+                                ⚠️ 보안: 악의적 코드가 서버 망가뜨리지 못하게 차단
+                            </div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">⚡ Performance Analyzer</div>
+                        <div class="component-desc">
+                            시간 복잡도, 메모리 사용량, p95 latency 측정
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">✨ Code Quality Check</div>
+                        <div class="component-desc">
+                            순환 복잡도, 중복 코드, 네이밍, 주석 등 정적 분석
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-layer: Debug Practice -->
+            <div class="sub-layer">
+                <div class="sub-layer-title">🐛 Debug Practice 파이프라인</div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">🔍 Bug Verifier</div>
+                        <div class="component-desc">
+                            수정한 코드가 원래 버그를 해결했는지 검증
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📊 Diff Analyzer</div>
+                        <div class="component-desc">
+                            변경된 라인 수, 영향 범위 분석
+                            <div class="easy-explain">
+                                💬 "최소한의 수정으로 해결했는가?" 평가
+                            </div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🧹 Refactoring Quality</div>
+                        <div class="component-desc">
+                            리팩토링 후 복잡도 감소, 중복 제거, 테스트 유지 확인
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-layer: System Practice -->
+            <div class="sub-layer">
+                <div class="sub-layer-title">🏗️ System Practice 파이프라인</div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📐 Mermaid Parser</div>
+                        <div class="component-desc">
+                            다이어그램 문법 검증 및 구조 파싱
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🏛️ Architecture Reviewer</div>
+                        <div class="component-desc">
+                            SPOF(단일 장애점), 병목, 보안 취약점 체크리스트 검토
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">⚖️ Tradeoff Analyzer</div>
+                        <div class="component-desc">
+                            설계 결정의 장단점 분석
+                            <div class="easy-explain">
+                                💬 "왜 캐시를 썼나요? 정합성 문제는?" 같은 질문 생성
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-layer: Ops Practice -->
+            <div class="sub-layer">
+                <div class="sub-layer-title">🚨 Ops Practice 파이프라인</div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📊 Metrics/Logs Analyzer</div>
+                        <div class="component-desc">
+                            시뮬레이션된 장애 상황의 메트릭/로그 분석
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🎯 Decision Validator</div>
+                        <div class="component-desc">
+                            사용자의 조치가 올바른지 검증
+                            <div class="easy-explain">
+                                💬 "롤백 선택 → 정답", "스케일업 → 부분 점수"
+                            </div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">⏱️ MTTR Calculator</div>
+                        <div class="component-desc">
+                            평균 복구 시간(Mean Time To Recovery) 측정
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sub-layer">
+                <div class="sub-layer-title">🤖 Agent Practice 파이프라인</div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📥 Agent Handler</div>
+                        <div class="component-desc">
+                            수동/자동으로 제출된 에이전트 결과물을 수신 및 검증 시작
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">⚡ Auto-Submission Manager</div>
+                        <div class="component-desc">
+                            실제 LLM API와 통신하여 에이전트 답변을 자동 생성 및 제출
+                            <div class="easy-explain">
+                                💬 쉽게: 사람이 일일이 답을 안 써도 AI가 에이전트 역할을 대신 수행!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📝 Prompt Evaluator</div>
+                        <div class="component-desc">
+                            프롬프트 품질 평가 (명확성, 구조, few-shot 예시)
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔍 RAG Quality Checker</div>
+                        <div class="component-desc">
+                            검색 품질, 청크 크기, 관련성 점수 분석
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🎭 Hallucination Detector</div>
+                        <div class="component-desc">
+                            답변이 검색 결과와 일치하는지(faithfulness) 확인
+                            <div class="key-point">
+                                ⚠️ 핵심: "근거 없는 주장" 탐지
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 5 -->
+        <div class="layer layer-5">
+            <div class="layer-title">5️⃣ Evaluation Engine - 객관적 측정 + 체크리스트</div>
+            <div class="layer-intro">
+                <strong>📏 이 레이어는 뭐하는 곳?</strong><br>
+                모든 트랙의 결과를 "숫자로 변환"하고 체크리스트로 정리
+                <div class="analogy">
+                    📊 비유: 헬스장의 "InBody 측정기"<br>
+                    체중, 근육량, 체지방률 같은 객관적 수치 제공
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">🧪 Test Case Manager</div>
+                    <div class="component-desc">
+                        모든 테스트 케이스 실행 및 결과 수집
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">📈 Metrics Aggregator</div>
+                    <div class="component-desc">
+                        정확도, 성능, 품질 점수 종합
+                        <div class="easy-explain">
+                            💬 예시: "정확도 85%, p95 latency 120ms, 코드 품질 B+"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">✅ Objective Feedback</div>
+                    <div class="component-desc">
+                        측정 가능한 피드백 생성
+                        <div class="easy-explain">
+                            💬 "테스트 3/5 통과", "메모리 제한 초과", "복잡도 O(n²)"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">📋 Checklist Engine</div>
+                    <div class="component-desc">
+                        트랙별 체크리스트 자동 작성
+                        <div class="easy-explain">
+                            💬 System: ✅ 캐시 전략, ❌ SPOF 존재, ⚠️ 확장성 고려 부족
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="note">
+                <strong>💡 중요:</strong> 이 레이어까지는 "완전 자동", AI 없이 돌아감.<br>
+                다음 레이어부터 LLM이 등장해서 "코칭 모드"로 전환!
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 6 -->
+        <div class="layer layer-6">
+            <div class="layer-title">6️⃣ AI/LLM Layer - 코치의 등장</div>
+            <div class="layer-intro">
+                <strong>🤖 이 레이어는 뭐하는 곳?</strong><br>
+                숫자로 나온 결과를 "사람의 언어"로 풀어서 설명하고, 더 나은 방법을 제시
+                <div class="analogy">
+                    🧑‍🏫 비유: 헬스장의 "퍼스널 트레이너"<br>
+                    "자세가 이상해요", "이렇게 하면 더 좋아요", "다음엔 이 운동 해보세요"
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">🎼 LLM Orchestrator</div>
+                    <div class="component-desc">
+                        여러 LLM 호출을 조율 (GPT-4, Google, 시뮬레이션 모드)
+                        <div class="easy-explain">
+                            💬 역할: Auto-Submission을 위한 추론(Inference) 지원 및 코칭 수행
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">❓ Question Generator</div>
+                    <div class="component-desc">
+                        사용자의 선택/코드를 보고 꼬리 질문 생성
+                        <div class="easy-explain">
+                            💬 "왜 HashMap을 썼나요? TreeMap은 고려 안 했나요?"<br>
+                            "캐시 TTL을 5분으로 한 이유가 뭔가요?"
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 핵심 차별점: 단순 정답/오답이 아니라 '생각하게 만들기'
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">💬 Coach Feedback</div>
+                    <div class="component-desc">
+                        친절하고 구체적인 피드백 생성
+                        <div class="easy-explain">
+                            💬 "좋았어요: null 체크 꼼꼼함"<br>
+                            "개선 포인트: 예외 메시지가 너무 generic함"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">💡 Alternative Solutions</div>
+                    <div class="component-desc">
+                        다른 접근법 제시
+                        <div class="easy-explain">
+                            💬 "이렇게 풀 수도 있어요: Trie 대신 Suffix Array"<br>
+                            "이런 아키텍처는 어때요: Event Sourcing + CQRS"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 7 -->
+        <div class="layer layer-7">
+            <div class="layer-title">7️⃣ User Progress - 성장 기록 & 추천</div>
+            <div class="layer-intro">
+                <strong>📊 이 레이어는 뭐하는 곳?</strong><br>
+                사용자의 모든 연습 기록을 저장하고, 다음에 뭘 할지 추천
+                <div class="analogy">
+                    📈 비유: 헬스장의 "운동 일지 + 맞춤 루틴 추천"<br>
+                    "지난주보다 벤치프레스 5kg 늘었네요! 다음엔 데드리프트 도전?"
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">📍 Progress Tracker</div>
+                    <div class="component-desc">
+                        각 트랙별 진행도, 강점/약점 분석
+                        <div class="easy-explain">
+                            💬 "Code Practice 15문제, System Practice 3문제 완료"<br>
+                            "디버깅은 잘하는데 아키텍처 설계가 약함"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">💾 User History DB</div>
+                    <div class="component-desc">
+                        제출 기록, 점수, 피드백, 시간 소요 모두 저장
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">🎯 Next Challenge Recommender</div>
+                    <div class="component-desc">
+                        개인화된 다음 문제 추천
+                        <div class="easy-explain">
+                            💬 "비슷한 수준의 사용자들이 많이 푼 문제"<br>
+                            "당신이 약한 부분을 보완할 문제"<br>
+                            "Campaign Mode 도전 가능!"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">⬇️</div>
+
+        <!-- Layer 8 -->
+        <div class="layer layer-8">
+            <div class="layer-title">8️⃣ Infrastructure - 시스템을 떠받치는 기둥</div>
+            <div class="layer-intro">
+                <strong>🏗️ 이 레이어는 뭐하는 곳?</strong><br>
+                모든 레이어가 안정적으로 돌아가게 하는 "보이지 않는 인프라"
+                <div class="analogy">
+                    🏢 비유: 헬스장의 "전기, 수도, 냉난방"<br>
+                    눈에 안 보이지만 이게 없으면 헬스장 자체가 안 돌아감
+                </div>
+            </div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">☁️ Object Storage (S3)</div>
+                    <div class="component-desc">
+                        코드 제출물, 다이어그램, 로그 파일 저장
+                        <div class="easy-explain">
+                            💬 쉽게: 클라우드 하드디스크. 용량 무제한, 안정성 99.999%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">⚡ Cache (Redis)</div>
+                    <div class="component-desc">
+                        자주 쓰는 데이터(문제, 테스트 케이스)를 메모리에 캐싱
+                        <div class="easy-explain">
+                            💬 쉽게: 자주 쓰는 운동 도구는 손 닿는 곳에 두기
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 효과: DB 부하 90% 감소, 응답 속도 10배 향상
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">📨 Message Queue (Kafka)</div>
+                    <div class="component-desc">
+                        무거운 작업(LLM 호출, 테스트 실행)을 비동기로 처리
+                        <div class="easy-explain">
+                            💬 쉽게: "주문 접수했어요, 조리는 천천히~" 느낌의 대기열
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 이게 없으면: 사용자는 10초씩 기다려야 함 → 이탈
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component">
+                    <div class="component-title">📊 Monitoring & Logging</div>
+                    <div class="component-desc">
+                        시스템 상태 감시, 에러 추적, 성능 모니터링
+                        <div class="easy-explain">
+                            💬 쉽게: CCTV + 헬스장 관리자. "기구 고장났나?", "오늘 사람 많네?"
+                        </div>
+                        <div class="key-point">
+                            ⚠️ 실전 예: "LLM API 응답 속도 2초 → 알람" → 즉시 대응
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Loop -->
+        <div
+            style="margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+            <h2 style="margin-bottom: 20px;">🔄 공통 연습 루프 (모든 Practice 동일)</h2>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size: 28px; margin-bottom: 5px;">1️⃣</div>
+                    <strong>Scenario + Constraints</strong><br>
+                    <small>상황과 제약 조건 제공</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size: 28px; margin-bottom: 5px;">2️⃣</div>
+                    <strong>사용자 제출</strong><br>
+                    <small>Artifact(결과물) 제출</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size: 28px; margin-bottom: 5px;">3️⃣</div>
+                    <strong>Objective + Coach FB</strong><br>
+                    <small>측정 + 코칭 피드백</small>
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                    <div style="font-size: 28px; margin-bottom: 5px;">4️⃣</div>
+                    <strong>다음 추천</strong><br>
+                    <small>난이도/주제 추천</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Differentiators -->
+        <div
+            style="margin-top: 40px; padding: 25px; background: #e8f5e9; border-radius: 10px; border-left: 5px solid #4caf50;">
+            <h2 style="color: #2e7d32; margin-bottom: 15px;">🎯 Engineering Gym의 핵심 차별점</h2>
+            <ul style="line-height: 2; color: #1b5e20;">
+                <li><strong>실무형 문제:</strong> 단순 알고리즘이 아닌 "현업에서 진짜 만나는 상황"</li>
+                <li><strong>5가지 역량 통합:</strong> 코딩 + 디버깅 + 설계 + 운영 + AI를 모두 훈련</li>
+                <li><strong>측정 + 코칭의 조화:</strong> 객관적 숫자 + AI의 주관적 피드백</li>
+                <li><strong>꼬리 질문:</strong> 단순 정답/오답이 아니라 "왜?"를 묻는 시니어 엔지니어 스타일</li>
+                <li><strong>Campaign Mode:</strong> 실무 프로젝트의 전체 라이프사이클 경험</li>
+                <li><strong>성장 가시화:</strong> 약점 파악 → 맞춤 추천 → 점진적 향상</li>
+            </ul>
+        </div>
+
+        <!-- Target Users -->
+        <div
+            style="margin-top: 40px; padding: 25px; background: #fff3e0; border-radius: 10px; border-left: 5px solid #ff9800;">
+            <h2 style="color: #e65100; margin-bottom: 15px;">👥 누가 쓰면 좋을까?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong>🎓 신입 개발자</strong><br>
+                    <small>코딩테스트는 합격했는데 실무 감각이 부족한 분</small>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong>💼 취업 준비생</strong><br>
+                    <small>"실무형 포트폴리오"를 만들고 싶은 분</small>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong>🔧 주니어 엔지니어</strong><br>
+                    <small>시니어로 가는 길목에서 역량을 키우고 싶은 분</small>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px;">
+                    <strong>🚀 커리어 전환</strong><br>
+                    <small>다른 분야에서 개발로 넘어오는 분 (빠른 실무 적응)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 50px; padding: 20px; text-align: center; color: #7f8c8d; border-top: 2px solid #ddd;">
+            <p style="font-size: 14px;">
+                💡 이 문서는 Engineering Gym 시스템의 전체 아키텍처를 설명합니다.<br>
+                각 레이어가 어떻게 연결되어 "실무 역량 훈련"이라는 목표를 달성하는지 보여줍니다.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+
+</html>

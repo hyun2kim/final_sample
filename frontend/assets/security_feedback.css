@@ -1,0 +1,50 @@
+/* 잠긴 섹션 위에 마우스 올렸을 때 안내 커서 */
+.locked-content:hover {
+    cursor: not-allowed;
+}
+
+/* 2026-01-17: Scroll Warning Toast Styling */
+.scroll-warning-toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: #ffbf2d;
+    /* Playground Yellow */
+    color: #1e293b;
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 191, 45, 0.4);
+    z-index: 2200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid #1e293b;
+    white-space: nowrap;
+}
+
+.scroll-warning-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.scroll-warning-toast i {
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
+}

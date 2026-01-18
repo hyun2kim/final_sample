@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Gym Architecture</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base', // 기본 테마 사용
+            themeVariables: {
+                primaryColor: '#e3f2fd', // 기본 배경색 (Frontend)
+                edgeLabelBackground: '#ffffff',
+                tertiaryColor: '#f5f5f5' // 서브그래프 배경색
+            },
+            flowchart: {
+                curve: 'basis', // 부드러운 곡선
+                padding: 20     // 노드 간 간격
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .mermaid-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 1600px;
+            overflow: auto;
+            /* 다이어그램이 클 경우 스크롤 허용 */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mermaid-container">
+        <h2>Engineering Gym: AI-Powered Practice Platform Architecture</h2>
+        <div class="mermaid">
+            %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e3f2fd', 'edgeLabelBackground':'#ffffff',
+            'tertiaryColor': '#f5f5f5'}}}%%
+            graph LR
+            %% --- 스타일 정의 ---
+            classDef frontend fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,rx:5,ry:5;
+            classDef gateway fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#e65100,rx:5,ry:5;
+            classDef processing fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,rx:2,ry:2;
+            classDef ai fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c,rx:5,ry:5;
+            classDef storage fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#37474f,rx:2,ry:2,stroke-dasharray: 5 5;
+            classDef db fill:#eceff1,stroke:#546e7a,stroke-width:3px,color:#37474f,shape:cylinder;
+
+            %% --- 1. 사용자 입력 계층 (왼쪽) ---
+            subgraph "1️⃣ Client Layer"
+            direction TB
+            UI[💻 Web/Mobile UI]
+            CodeEditor[⌨️ Code Editor]
+            DiagramEditor[📊 Diagram Editor]
+            end
+
+            %% --- 2. 게이트웨이 및 인증 ---
+            subgraph "2️⃣ Gateway & Auth"
+            direction TB
+            Gateway[🚪 API Gateway]
+            RateLimit[⏱️ Rate Limiter]
+            Auth[🔐 Auth Service<br />(JWT)]
+            end
+
+            %% --- 3 & 4. 핵심 처리 및 데이터 (중앙) ---
+            subgraph "Core Engine & Data"
+            direction TB
+            Router[🔄 Practice Router]
+
+            subgraph "📚 Content DBs"
+            direction LR
+            ScenarioDB[(Scenario DB)]:::db
+            ConstraintsDB[(Constraints DB)]:::db
+            TestCaseDB[(Test Cases)]:::db
+            TemplateDB[(Templates)]:::db
+            end
+
+            %% 5가지 실습 트랙 병렬 배치
+            subgraph "⚙️ 5 Practice Tracks"
+            direction TB
+            subgraph "💻 Code Track"
+            CodeHandler[Handler] --> Sandbox[📦 Sandbox] --> PerfAnalyzer[⚡ Perf Check] --> QualityCheck[✨ Quality]
+            end
+            subgraph "🐛 Debug Track"
+            DebugHandler[Handler] --> BugVerifier[🔍 Verifier] --> DiffAnalyzer[📊 Diff] --> RefactorCheck[🧹 Refactor]
+            end
+            subgraph "🏗️ System Track"
+            SystemHandler[Handler] --> MermaidParser[📐 Parser] --> ArchReviewer[🏛️ Reviewer] --> TradeoffAnalyzer[⚖️
+            Tradeoff]
+            end
+            subgraph "🚨 Ops Track"
+            OpsHandler[Handler] --> MetricsCollector[📊 Analyzer] --> DecisionEngine[🎯 Validator] --> MTTRCalculator[⏱️
+            MTTR]
+            end
+            subgraph "🤖 Agent Track"
+            AgentHandler[Handler] --> PromptEvaluator[📝 Prompt Eval] --> RAGAnalyzer[🔍 RAG Check] -->
+            HallucinationDetector[🎭 Detector]
+            end
+            end
+            end
+
+            %% --- 5 & 6. 평가 및 AI (오른쪽) ---
+            subgraph "🧠 Evaluation & AI Brain"
+            direction TB
+
+            subgraph "5️⃣ Evaluation Engine"
+            TestManager[🧪 Test Case Manager]
+            MetricsAgg[📈 Metrics Aggregator]
+            ObjectiveFB[✅ Objective Feedback]
+            ChecklistEngine[📋 Checklist Engine]
+            TestManager --> MetricsAgg --> ObjectiveFB --> ChecklistEngine
+            end
+
+            subgraph "6️⃣ AI/LLM Layer"
+            LLMOrch[🎼 LLM Orchestrator]
+            QuestionGen[❓ Question Gen]
+            CoachFB[💬 Coach Feedback]
+            AltSolution[💡 Alt Solutions]
+            LLMOrch --> QuestionGen & CoachFB & AltSolution
+            end
+            end
+
+            %% --- 7. 사용자 진척도 (오른쪽 하단) ---
+            subgraph "7️⃣ User Progress"
+            direction TB
+            ProgressTracker[📍 Tracker]
+            UserHistory[(💾 History DB)]:::db
+            Recommender[🎯 Next Challenge]
+            ProgressTracker --> UserHistory --> Recommender
+            end
+
+            %% --- 8. 인프라 (하단 배경) ---
+            subgraph "8️⃣ Infrastructure Base"
+            direction LR
+            Storage[☁️ Object Storage<br />S3]:::storage
+            Cache[⚡ Cache<br />Redis]:::storage
+            Queue[📨 Message Queue<br />Kafka]:::storage
+            Monitoring[📊 Monitoring &<br />Logging]:::storage
+            end
+
+            %% ========== 주요 흐름 연결 (굵은 선) ==========
+            %% Client -> Gateway
+            UI & CodeEditor & DiagramEditor ==> Gateway
+            Gateway ==> RateLimit ==> Auth ==> Router
+
+            %% Router -> Tracks
+            Router ==> CodeHandler & DebugHandler & SystemHandler & OpsHandler & AgentHandler
+
+            %% DB -> Router/Managers (데이터 공급)
+            ScenarioDB & ConstraintsDB -.-> Router
+            TestCaseDB & TemplateDB -.-> TestManager
+
+            %% Tracks -> Evaluation Engine (결과 취합)
+            QualityCheck & RefactorCheck & TradeoffAnalyzer & MTTRCalculator & HallucinationDetector ==> TestManager
+
+            %% Evaluation -> AI
+            ChecklistEngine ==> LLMOrch
+
+            %% AI -> Progress -> UI Loop (피드백 루프)
+            AltSolution & CoachFB ==> ProgressTracker
+            Recommender -.->|Next Recommendation| UI
+
+            %% ========== 인프라 연결 (점선) ==========
+            Storage & Cache & Queue & Monitoring -.- Router & TestManager & LLMOrch
+
+            %% ========== 스타일 적용 ==========
+            class UI,CodeEditor,DiagramEditor frontend;
+            class Gateway,RateLimit,Auth gateway;
+            class
+            Router,CodeHandler,Sandbox,PerfAnalyzer,QualityCheck,DebugHandler,BugVerifier,DiffAnalyzer,RefactorCheck,SystemHandler,MermaidParser,ArchReviewer,TradeoffAnalyzer,OpsHandler,MetricsCollector,DecisionEngine,MTTRCalculator,AgentHandler,PromptEvaluator,RAGAnalyzer,HallucinationDetector
+            processing;
+            class
+            TestManager,MetricsAgg,ObjectiveFB,ChecklistEngine,LLMOrch,QuestionGen,CoachFB,AltSolution,ProgressTracker,Recommender
+            ai;
+        </div>
+    </div>
+</body>
+
+</html>

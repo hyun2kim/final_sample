@@ -1,0 +1,1143 @@
+[
+  {
+    "id": "irrelevance_0",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "밑변이 10m이고 높이가 5m인 경우 삼각형의 면적을 계산합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "determine_body_mass_index",
+        "description": "체중과 키를 고려하여 체질량지수를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "weight": {
+              "type": "float",
+              "description": "개인의 체중(kg)입니다."
+            },
+            "height": {
+              "type": "float",
+              "description": "개인의 키(미터)입니다."
+            }
+          },
+          "required": [
+            "weight",
+            "height"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_1",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "계수 a = 1, b = 2, c = 3을 사용하여 2차 방정식을 풉니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "math.sum",
+        "description": "목록에 있는 모든 숫자의 합을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "numbers": {
+              "type": "array",
+              "items": {
+                "type": "float"
+              },
+              "description": "합산할 숫자 목록입니다."
+            },
+            "decimal_places": {
+              "type": "integer",
+              "description": "반올림할 소수 자릿수입니다. 기본값은 2입니다."
+            }
+          },
+          "required": [
+            "numbers"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_2",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "방정식 3x^2 - 2x - 5의 근을 풀어보세요."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "distance_calculator.calculate",
+        "description": "두 지리적 좌표 사이의 거리를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "coordinate_1": {
+              "type": "array",
+              "items": {
+                "type": "float"
+              },
+              "description": "첫 번째 좌표는 위도와 경도의 쌍입니다."
+            },
+            "coordinate_2": {
+              "type": "array",
+              "items": {
+                "type": "float"
+              },
+              "description": "두 번째 좌표는 위도와 경도의 쌍입니다."
+            }
+          },
+          "required": [
+            "coordinate_1",
+            "coordinate_2"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_3",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "방정식 y = 3x + 2의 직선에 수직인 직선의 기울기는 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "find_critical_points",
+        "description": "함수의 임계점을 찾습니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "function": {
+              "type": "string",
+              "description": "임계점을 찾는 기능입니다."
+            },
+            "variable": {
+              "type": "string",
+              "description": "함수의 변수입니다."
+            },
+            "range": {
+              "type": "array",
+              "items": {
+                "type": "float"
+              },
+              "description": "임계점을 찾기 위해 고려해야 할 범위입니다. 선택 과목. 기본값은 [0.0, 3.4]입니다."
+            }
+          },
+          "required": [
+            "function",
+            "variable"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_4",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "선형 방정식 bx + c = 0의 근은 무엇입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "find_roots",
+        "description": "2차 방정식 ax^2 + bx + c = 0의 근을 구합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "a": {
+              "type": "float",
+              "description": "x^2의 계수."
+            },
+            "b": {
+              "type": "float",
+              "description": "x의 계수."
+            },
+            "c": {
+              "type": "float",
+              "description": "상수항."
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_5",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "길이가 5미터, 너비가 4미터인 직사각형의 둘레는 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "solve_quadratic_equation",
+        "description": "2차 방정식을 풀고 가능한 솔루션을 반환합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "a": {
+              "type": "float",
+              "description": "2차 방정식에서 x-제곱 항의 계수입니다."
+            },
+            "b": {
+              "type": "float",
+              "description": "2차 방정식에서 x 항의 계수입니다."
+            },
+            "c": {
+              "type": "float",
+              "description": "이차 방정식의 상수 항."
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_6",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "가로 5m, 세로 7m인 직사각형의 넓이는 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "draw_circle",
+        "description": "제공된 반경을 기준으로 원을 그립니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "radius": {
+              "type": "float",
+              "description": "원의 반경입니다."
+            },
+            "unit": {
+              "type": "string",
+              "description": "반지름의 측정 단위입니다. 예를 들어 미터는 'm', 센티미터는 'cm'"
+            }
+          },
+          "required": [
+            "radius",
+            "unit"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_7",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "x = 1에서 x = 5까지 함수 f(x) = 3x^2의 곡선 아래 면적은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "math.integral_calculator",
+        "description": "특정 구간에 걸쳐 수학 함수의 정적분을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "function": {
+              "type": "string",
+              "description": "적분을 계산해야 하는 수학 함수입니다."
+            },
+            "lower_bound": {
+              "type": "float",
+              "description": "정적분의 하한입니다."
+            },
+            "upper_bound": {
+              "type": "float",
+              "description": "정적분의 상한입니다."
+            }
+          },
+          "required": [
+            "function",
+            "lower_bound",
+            "upper_bound"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_8",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "1에서 5까지 x^3의 적분 구하기"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "str_to_int",
+        "description": "문자열 값을 정수로 변환합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "정수로 변환할 문자열 값"
+            }
+          },
+          "required": [
+            "value"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_9",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "x=1에서 x=3까지 f(x)=x^2의 정적분을 구합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "CalculateTax",
+        "description": "연간 소득, 세율 및 기타 공제액을 기준으로 소득세를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "annual_income": {
+              "type": "float",
+              "description": "개인의 연간 소득입니다."
+            },
+            "tax_rate": {
+              "type": "float",
+              "description": "세율."
+            },
+            "other_deductions": {
+              "type": "float",
+              "description": "기타 공제."
+            }
+          },
+          "required": [
+            "annual_income",
+            "tax_rate",
+            "other_deductions"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_10",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "1에서 함수 '2x'의 도함수를 계산합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculus.compute_definite_integral",
+        "description": "주어진 구간 내에서 함수의 정적분을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "function": {
+              "type": "string",
+              "description": "통합할 기능입니다."
+            },
+            "interval": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "정적분을 계산해야 하는 간격입니다."
+            },
+            "num_of_partitions": {
+              "type": "integer",
+              "description": "근사치를 위한 파티션 수입니다. 기본값은 1000입니다."
+            }
+          },
+          "required": [
+            "function",
+            "interval"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_11",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "30에 가장 가까운 정수는 무엇입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "get_closest_prime",
+        "description": "주어진 숫자보다 작은 가장 가까운 소수를 검색합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "number": {
+              "type": "integer",
+              "description": "가장 가까운 소수를 찾기 위한 상한값으로 사용되는 숫자입니다."
+            },
+            "skip": {
+              "type": "integer",
+              "description": "건너뛸 가장 가까운 소수의 수입니다. 기본값은 0입니다."
+            }
+          },
+          "required": [
+            "number",
+            "skip"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_12",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "뉴욕에서 보스턴까지 가장 빠른 경로를 찾아보세요."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "prime_numbers_in_range",
+        "description": "특정 숫자 범위 내의 모든 소수를 찾으십시오.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "start": {
+              "type": "integer",
+              "description": "숫자 범위의 시작입니다."
+            },
+            "end": {
+              "type": "integer",
+              "description": "숫자 범위의 끝입니다."
+            },
+            "return_format": {
+              "type": "string",
+              "enum": [
+                "array",
+                "string"
+              ],
+              "description": "소수가 반환되어야 하는 형식입니다.",
+              "default": "string"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_13",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "100의 소인수를 계산합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_compound_interest",
+        "description": "주어진 원금 금액, 이자율, 시간 및 복리 빈도에 대한 복리 이자를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "principal_amount": {
+              "type": "float",
+              "description": "초기에 대출받거나 투자된 금액입니다."
+            },
+            "annual_interest_rate": {
+              "type": "float",
+              "description": "십진수로 나타낸 연간 이자율입니다. 예를 들어 이자율이 5%이면 0.05로 입력됩니다."
+            },
+            "compounding_periods_per_year": {
+              "type": "integer",
+              "description": "연간 이자가 복리로 계산되는 횟수입니다."
+            },
+            "years": {
+              "type": "integer",
+              "description": "돈을 투자한 기간(년)입니다."
+            }
+          },
+          "required": [
+            "principal_amount",
+            "annual_interest_rate",
+            "compounding_periods_per_year",
+            "years"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_14",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "공을 5m/s의 속도로 위로 똑바로 던지면 도달하는 가속도는 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_maximum_height",
+        "description": "공기 저항을 무시하고 초기 속도로 물체를 위로 똑바로 던지면 물체가 도달할 수 있는 최대 높이를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_velocity": {
+              "type": "float",
+              "description": "초당 미터 단위의 초기 속도입니다."
+            },
+            "gravity": {
+              "type": "float",
+              "description": "중력으로 인한 가속도(미터/초 제곱), 기본값은 9.8입니다."
+            }
+          },
+          "required": [
+            "initial_velocity"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_15",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "최신 영화 개봉작은 무엇입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_velocity",
+        "description": "초기 속도, 가속도 및 시간을 고려하여 움직이는 물체의 최종 속도를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_velocity": {
+              "type": "float",
+              "description": "물체의 초기 속도(m/s)입니다."
+            },
+            "acceleration": {
+              "type": "float",
+              "description": "물체의 가속도(m/s^2)입니다."
+            },
+            "time": {
+              "type": "float",
+              "description": "물체가 움직이는 시간(초)입니다."
+            }
+          },
+          "required": [
+            "initial_velocity",
+            "acceleration",
+            "time"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_16",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "각도 '세타'에서 속도 'v'로 발사될 때 자동차는 시간 't'에 얼마나 멀리 이동합니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_projectile_range",
+        "description": "운동 방정식을 사용하여 초기 속도의 각도로 발사된 발사체의 범위를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_velocity": {
+              "type": "float",
+              "description": "발사체가 발사되는 초기 속도입니다."
+            },
+            "angle": {
+              "type": "float",
+              "description": "발사체가 발사되는 각도입니다. 각도 단위여야 합니다."
+            },
+            "time": {
+              "type": "float",
+              "description": "범위가 계산되기까지의 시간(초)입니다.",
+              "default": 0.5
+            }
+          },
+          "required": [
+            "initial_velocity",
+            "angle"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_17",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "지금 몇 시야?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_time",
+        "description": "특정 속도로 거리를 이동하는 데 걸리는 시간을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "distance": {
+              "type": "float",
+              "description": "측정할 거리(미터)입니다."
+            },
+            "speed": {
+              "type": "float",
+              "description": "물체가 움직이는 속도(m/s)입니다."
+            },
+            "round_to_nearest_second": {
+              "type": "boolean",
+              "description": "시간을 가장 가까운 초 단위로 반올림하는 선택적 매개변수입니다.",
+              "default": false
+            }
+          },
+          "required": [
+            "distance",
+            "speed"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_18",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "주어진 운동량에 대한 힘의 각도를 어떻게 찾을 수 있나요?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_vector_angle",
+        "description": "X 및 Y 구성 요소를 기반으로 벡터의 각도를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "X_component": {
+              "type": "float",
+              "description": "벡터의 X 구성 요소입니다."
+            },
+            "Y_component": {
+              "type": "float",
+              "description": "벡터의 Y 구성 요소입니다."
+            },
+            "use_degrees": {
+              "type": "boolean",
+              "description": "true인 경우 결과는 각도 단위입니다. false인 경우 결과는 라디안 단위가 됩니다. 기본값은 거짓입니다."
+            }
+          },
+          "required": [
+            "X_component",
+            "Y_component"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_19",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "밑면 반지름이 3cm, 높이가 5cm인 원뿔의 부피를 구합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "investment_calculator.calculate_return",
+        "description": "특정 기간 이후의 투자 수익을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_investment": {
+              "type": "float",
+              "description": "초기 투자금액입니다."
+            },
+            "annual_rate": {
+              "type": "float",
+              "description": "연간 수익률입니다."
+            },
+            "years": {
+              "type": "integer",
+              "description": "투자 기간(년)입니다."
+            }
+          },
+          "required": [
+            "initial_investment",
+            "annual_rate",
+            "years"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_20",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "로스앤젤레스와 마이애미 간 비행 시간을 알아보세요."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "currency_converter",
+        "description": "한 통화에서 다른 통화로 값을 변환합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "base_currency": {
+              "type": "string",
+              "description": "변환하려는 기본 통화입니다."
+            },
+            "target_currency": {
+              "type": "string",
+              "description": "변환하려는 목표 통화입니다."
+            },
+            "amount": {
+              "type": "float",
+              "description": "변환하려는 금액입니다."
+            }
+          },
+          "required": [
+            "base_currency",
+            "target_currency",
+            "amount"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_21",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "2A의 전류가 흐르는 도선에서 4m 떨어진 지점의 자기장은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_wave_amplitude",
+        "description": "최대 전기장 강도를 기준으로 전자기파의 진폭을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "max_electric_field_strength": {
+              "type": "float",
+              "description": "전자기파의 최대 전기장 세기."
+            },
+            "c": {
+              "type": "float",
+              "description": "진공에서 빛의 속도, 일반적으로 'c'로 표시됩니다. 기본값은 3 * 10^8m/s입니다."
+            },
+            "wave_frequency": {
+              "type": "float",
+              "description": "전자기파의 주파수. 기본값은 1Hz입니다."
+            }
+          },
+          "required": [
+            "max_electric_field_strength"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_22",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "전류 'I'가 흐르는 도선으로부터 거리 'r'에 위치한 지점의 자기장은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "magnetic_field_intensity",
+        "description": "전류가 흐르는 전선으로부터 주어진 거리에 위치한 지점의 자기장 강도를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "current": {
+              "type": "float",
+              "description": "와이어를 통해 흐르는 전류(암페어)입니다."
+            },
+            "distance": {
+              "type": "float",
+              "description": "자기장 강도가 필요한 와이어로부터의 거리(미터)입니다."
+            },
+            "permeability": {
+              "type": "float",
+              "description": "여유 공간의 투자율(선택 사항) 기본값은 4*pi*10^-7입니다."
+            }
+          },
+          "required": [
+            "current",
+            "distance"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_23",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "전자의 질량은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_magnetic_field",
+        "description": "암페어의 법칙을 사용하여 전류가 흐르는 직선 도선에서 일정 거리에 있는 자기장을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "current": {
+              "type": "float",
+              "description": "와이어를 통해 흐르는 전류(암페어)입니다."
+            },
+            "distance": {
+              "type": "float",
+              "description": "자기장을 계산할 와이어로부터의 거리(미터)입니다."
+            },
+            "permeability": {
+              "type": "float",
+              "description": "여유 공간의 투과성. 기본값은 4π × 10^−7 N/A^2입니다."
+            }
+          },
+          "required": [
+            "current",
+            "distance"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_24",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "전자의 질량은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_current",
+        "description": "전압과 저항을 주어 전류를 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "voltage": {
+              "type": "float",
+              "description": "전압(볼트)입니다."
+            },
+            "resistance": {
+              "type": "float",
+              "description": "옴 단위의 전기 저항입니다."
+            },
+            "frequency": {
+              "type": "float",
+              "description": "전류의 주파수는 기본적으로 50Hz입니다."
+            }
+          },
+          "required": [
+            "voltage",
+            "resistance"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_25",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "10kPa의 압력에서 물의 어는점은 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "thermodynamics.calculate_boiling_point",
+        "description": "특정 압력에서 특정 물질의 끓는점을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "substance": {
+              "type": "string",
+              "description": "끓는점을 계산하는 물질입니다."
+            },
+            "pressure": {
+              "type": "float",
+              "description": "끓는점을 계산할 압력입니다."
+            },
+            "unit": {
+              "type": "string",
+              "description": "압력의 단위입니다. 기본값은 'kPa'입니다."
+            }
+          },
+          "required": [
+            "substance",
+            "pressure"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_26",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "2m3의 밀폐된 챔버를 25°C~100°C의 공기로 가열하면 얼마나 많은 가스가 생성됩니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "thermodynamics.calc_gas_pressure",
+        "description": "가열로 인해 닫힌 챔버의 가스 압력을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "volume": {
+              "type": "float",
+              "description": "입방미터 단위의 챔버 부피입니다."
+            },
+            "initial_temperature": {
+              "type": "float",
+              "description": "가스의 초기 온도(섭씨)입니다."
+            },
+            "final_temperature": {
+              "type": "float",
+              "description": "가스의 최종 온도(섭씨)입니다."
+            },
+            "initial_pressure": {
+              "type": "float",
+              "description": "파스칼 단위의 가스 초기 압력입니다. 기본값은 표준 대기압입니다."
+            }
+          },
+          "required": [
+            "volume",
+            "initial_temperature",
+            "final_temperature"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_27",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "물 3kg의 온도를 섭씨 4도 높이는 데 필요한 에너지는 얼마입니까?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_heat",
+        "description": "비열을 이용하여 물질의 온도를 높이는 데 필요한 열을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "mass": {
+              "type": "float",
+              "description": "킬로그램 단위의 물질 질량입니다."
+            },
+            "specific_heat": {
+              "type": "float",
+              "description": "물질의 비열(J/kg.°C)입니다. 물의 경우 4.184 J/kg.°C입니다."
+            },
+            "change_in_temp": {
+              "type": "float",
+              "description": "섭씨 온도의 변화입니다."
+            }
+          },
+          "required": [
+            "mass",
+            "specific_heat",
+            "change_in_temp"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_28",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "육각형은 변이 몇 개 있나요?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_boiling_point",
+        "description": "주어진 압력에서 주어진 물질의 끓는점을 계산합니다.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "substance": {
+              "type": "string",
+              "description": "물질의 화학명."
+            },
+            "pressure": {
+              "type": "float",
+              "description": "외부 압력. 기본값은 1atm(대기압)입니다."
+            }
+          },
+          "required": [
+            "substance",
+            "pressure"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "irrelevance_29",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "세포 내 미토콘드리아의 수를 확인합니다."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "get_cell_function",
+        "description": "부분에 따라 세포의 기능에 대한 정보를 알아보세요.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "cell_part": {
+              "type": "string",
+              "description": "세포의 일부. 미토콘드리아"
+            },
+            "detail_level": {
+              "type": "string",
+              "enum": [
+                "basic",
+                "detailed"
+              ],
+              "description": "셀 기능 정보의 세부정보 수준입니다."
+            }
+          },
+          "required": [
+            "cell_part",
+            "detail_level"
+          ]
+        }
+      }
+    ]
+  }
+]
