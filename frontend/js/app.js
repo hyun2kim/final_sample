@@ -551,10 +551,24 @@ class RateLimiter:
             this.isLoginModalOpen = false;
             this.sessionNickname = this.loginEmail.split('@')[0];
         },
-        handleSignUp() { this.isSignUpModalOpen = true; },
+        handleSignUp() { 
+            console.log('Sign Up button clicked - opening modal');
+            this.isSignUpModalOpen = true; 
+            this.$nextTick(() => {
+                console.log('isSignUpModalOpen:', this.isSignUpModalOpen);
+                if (window.lucide) window.lucide.createIcons();
+            });
+        },
         completeSignUp() {
             this.isSignUpModalOpen = false;
             this.isSignUpSuccessOpen = true;
+        },
+        addCustomInterest() {
+            if (this.signupCustomInterest && this.signupCustomInterest.trim()) {
+                this.availableInterests.push(this.signupCustomInterest.trim());
+                this.signupInterests.push(this.signupCustomInterest.trim());
+                this.signupCustomInterest = '';
+            }
         },
         closeSuccessModal() {
             this.isSignUpSuccessOpen = false;
@@ -617,8 +631,19 @@ class RateLimiter:
         }
     },
     mounted() {
+        console.log('Vue app mounted successfully');
+        console.log('Initial isSignUpModalOpen:', this.isSignUpModalOpen);
         this.fetchChapters();
+        // Lucide 아이콘 초기화
+        this.$nextTick(() => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+                console.log('Lucide icons initialized');
+            }
+        });
     }
 });
 
+console.log('Attempting to mount Vue app...');
 app.mount('#app');
+console.log('Vue app mounted to #app');

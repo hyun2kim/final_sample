@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
 import os
 import environ
 import dj_database_url
+
+# 2026-01-18: BASE_DIR 정의 (다른 설정에서 경로 참조를 위해 최상단에 위치해야 함)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 2026-01-18: 환경 변수 설정을 위한 django-environ 초기화
 env = environ.Env(
@@ -30,14 +32,13 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # 2026-01-18: 보안을 위해 SECRET_KEY를 환경 변수에서 가져옴
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-fallback-key-for-dev')
 
-# 2026-01-18: 프로덕션에서는 DEBUG를 False로 설정 (환경 변수 우선)
-DEBUG = env('DEBUG')
+# 2026-01-18: 실시간 공유(ngrok)를 위해 DEBUG=True 및 모든 호스트 허용 설정
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
-# 2026-01-18: 허용할 호스트 설정을 환경 변수에서 가져옴
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.onrender.com'])
-
-# 2026-01-17: ngrok 접속 시 CSRF 검증을 위해 신뢰할 수 있는 오리진 추가
-CSRF_TRUSTED_ORIGINS = ['https://squally-felsitic-burton.ngrok-free.dev']
+# 2026-01-17: ngrok 접속 시 CSRF 검증을 위해 모든 오리진을 신뢰 목록에 추가 (공유 세션용)
+# 주의: 실제 배포 시에는 특정 도메인으로 제한해야 합니다.
+CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.dev', 'http://*.ngrok.io']
 if env('RENDER_EXTERNAL_URL', default=None):
     CSRF_TRUSTED_ORIGINS.append(env('RENDER_EXTERNAL_URL'))
 
