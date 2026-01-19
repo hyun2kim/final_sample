@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- 2026-01-16: Architecture Gym 메인 프레임 구축 (Video background & Vue.js 연동) -->
+    <!-- 2026-01-19: Architecture Gym 소스 코드 분석 및 상세 주석 추가 -->
     <!-- [Role: 서비스의 메인 사용자 인터페이스 구조 및 레이아웃 정의] -->
+    <!-- 이 파일은 Django 템플릿 엔진을 사용하여 정적 자원을 로드하며, Vue.js로 동적 UI를 제어합니다. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture Gym | 아키텍처 놀이터 가보자고!</title>
     <link rel="stylesheet" href="{% static 'assets/style.css' %}?v=1.3">
@@ -24,7 +25,7 @@
 
 <body>
     <div id="app" v-cloak>
-        <!-- Navigation -->
+        <!-- [상단 네비게이션 바] 서비스 로고, 메뉴 이동, 로그인 상태 및 사용자 정보 표시 -->
         <nav class="navbar">
             <div class="logo">
                 <span class="logo-text">ARCH-GYM 🚀</span>
@@ -56,7 +57,7 @@
         <!-- 2026-01-17: 중복된 단순 공지사항 모달 제거 (하단의 프리미엄 디자인 모달 사용) -->
 
 
-        <!-- Hero Section -->
+        <!-- [히어로 섹션] 페이지 접속 시 가장 먼저 보이는 영역으로 비디오 배경과 메인 타이틀 포함 -->
         <header class="hero">
             <video autoplay muted loop id="hero-video">
                 <source src="{% static 'image/sports_gym.mp4' %}" type="video/mp4">
@@ -72,7 +73,7 @@
             </div>
         </header>
 
-        <!-- Chapter Section (Duolingo Style Path 고도화) -->
+        <!-- [챕터/스테이지 섹션] 사용자가 학습할 유닛들을 그리드 형태로 나열. 미로그인 시 접근 제한 로직 포함 -->
         <section id="chapters" class="section" :class="{ 'locked-content': !isLoggedIn }"
             @click="!isLoggedIn && (isAuthRequiredModalOpen = true)">
             <div class="hub-wrapper">
@@ -150,7 +151,7 @@
             -->
         </section>
 
-        <!-- Leaderboard Section -->
+        <!-- [리더보드 섹션] 상위 랭커들의 닉네임, 풀이 문제 수, 획득한 단백질 쉐이크 개수 표시 -->
         <section id="leaderboard" class="section" :class="{ 'locked-content': !isLoggedIn }"
             @click="!isLoggedIn && (isAuthRequiredModalOpen = true)">
             <h2 class="section-title">오늘의 득근 전당</h2>
@@ -184,7 +185,7 @@
             <p>&copy; 2026 Architecture Gym. Built with ⚡ by Antigravity AI.</p>
         </footer>
 
-        <!-- Unit Detail Popup Modal - Premium Game Theme V3 (2026-01-17) -->
+        <!-- [유닛 상세 팝업 모달] 특정 유닛(챕터)을 클릭했을 때 나타나는 상세 학습 경로 맵 -->
         <transition name="fade">
             <div v-if="isUnitModalOpen" class="modal-overlay" @click.self="isUnitModalOpen = false">
                 <div class="unit-detail-modal">
@@ -263,7 +264,7 @@
             </div>
         </transition>
 
-        <!-- Agent Practice Workspace Modal (2026-01-16 추가) -->
+        <!-- [에이전트 실습 워크스페이스] AI 프롬프트를 수정하고 실시간으로 채팅 테스트 및 성능 지표 확인 -->
         <transition name="fade">
             <div v-if="isAgentModalOpen" class="modal-overlay">
                 <div class="workspace-container">
@@ -358,7 +359,7 @@
             </div>
         </transition>
 
-        <!-- Evaluation Report Modal (제출 완료 후 상세 결과창) -->
+        <!-- [평가 결과 리포트] 실습 완료 후 AI가 분석한 객관적인 지표(정확도, 환각 등)를 대시보드 형태로 제공 -->
         <transition name="fade">
             <div v-if="isReportModalOpen" class="modal-overlay">
                 <div class="workspace-container report-container">
@@ -419,7 +420,7 @@
             </div>
         </transition>
 
-        <!-- Notice Popup (2026-01-17: 보안 강화 안내로 내용 현행화) -->
+        <!-- [공지사항 모달] 중요한 업데이트나 보안 안내를 표시하는 팝업 창 -->
         <transition name="fade">
             <div v-if="isNoticeOpen" class="modal-overlay notice-overlay" @click.self="closeNotice">
                 <div class="notice-container">
@@ -443,7 +444,7 @@
             </div>
         </transition>
 
-        <!-- Login Modal (Antigravity Design) -->
+        <!-- [로그인 모달] 기존 사용자를 위한 이메일/비밀번호 기반 인증 폼 -->
         <transition name="fade">
             <div v-if="isLoginModalOpen" class="modal-overlay">
                 <div class="auth-container">
@@ -483,7 +484,7 @@
             </div>
         </transition>
 
-        <!-- Sign Up Modal (Antigravity Design) -->
+        <!-- [회원가입 모달] 신규 사용자를 위한 정보 입력 폼 (관심 분야, 직군 등 상세 정보 수집) -->
         <transition name="fade">
             <div v-if="isSignUpModalOpen" class="modal-overlay">
                 <div class="auth-container">
@@ -582,7 +583,7 @@
             </div>
         </transition>
 
-        <!-- Mermaid Designer Modal (Unit 2 전용) -->
+        <!-- [머메이드 아키텍처 디자인 모달] Mermaid.js를 이용해 텍스트 기반으로 시스템 구조도를 그리는 도구 -->
         <transition name="fade">
             <div v-if="isMermaidModalOpen" class="modal-overlay">
                 <div class="workspace-container mermaid-workspace">
@@ -686,7 +687,7 @@
             </div>
         </transition>
 
-        <!-- Debug Gym Sandbox Modal (Unit 2) -->
+        <!-- [디버그 짐 샌드박스 모달] 코드 에디터와 터미널이 포함된 통합 개발 환경(IDE) 스타일의 실습공간 -->
         <transition name="fade">
             <div v-if="isDebugModalOpen" class="modal-overlay">
                 <div class="workspace-container debug-workspace"
@@ -791,7 +792,7 @@
             </div>
         </transition>
 
-        <!-- Code Practice Workspace Modal (Unit 1) -->
+        <!-- [코드 실습 워크스페이스] Unit 1 전용 코딩 과제 수행 및 성능 분석 결과 확인 창 -->
         <transition name="fade">
             <div v-if="isCodeModalOpen" class="modal-overlay">
                 <div class="workspace-container"
@@ -1171,7 +1172,7 @@
             </div>
         </transition>
 
-        <!-- Pseudo-Code Practice Modal (Unit 6 - Design from Image) -->
+        <!-- [슈도코드 실습 모달] 게임화된 UI에서 의사코드를 작성하고 알고리즘 로직을 익히는 공간 -->
         <transition name="fade">
             <div v-if="isPseudoModalOpen" class="modal-overlay pseudo-overlay">
                 <div class="pseudo-container">
@@ -1249,7 +1250,7 @@
             </div>
         </transition>
 
-        <!-- Auth Required Modal (Playground Theme) - 2026-01-17 추가 -->
+        <!-- [접근 제한 안내 모달] 로그인하지 않은 상태에서 유료/제한 콘텐츠 클릭 시 표시되는 유도 창 -->
         <transition name="fade">
             <div v-if="isAuthRequiredModalOpen" class="modal-overlay" @click.self="isAuthRequiredModalOpen = false">
                 <div class="auth-container playground-auth-card">
